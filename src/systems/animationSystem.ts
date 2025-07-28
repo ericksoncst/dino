@@ -3,7 +3,6 @@ let timer = 0;
 const ANIMATION_INTERVAL = 100;
 
 const animationSystem = (entities, { time }) => {
-  console.log('CALLED')
   const dino = entities.dino;
 
   if (!dino.running) return entities;
