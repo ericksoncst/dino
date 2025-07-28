@@ -8,11 +8,10 @@ const jump = (entities, { touches }) => {
     .forEach(() => {
       const velocityY = dino.velocity.y;
 
-      // Só pula se estiver no chão
       if (Math.abs(velocityY) < 0.01) {
         Matter.Body.setVelocity(dino, {
           x: dino.velocity.x,
-          y: -10, // valor negativo = sobe
+          y: -10,
         });
       }
     });

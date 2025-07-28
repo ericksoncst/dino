@@ -1,23 +1,22 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Image } from 'react-native';
 
-export default function Dino({ body, color }) {
-  if (!body || !body.position) return null;
-
-  const width = 50;
+export default function Dino({ body }) {
+  const width = 40;
   const height = 50;
   const x = body.position.x - width / 2;
   const y = body.position.y - height / 2;
 
   return (
-    <View
+    <Image
+      source={require('../assets/Dino.png')}
       style={{
         position: 'absolute',
         left: x,
         top: y,
         width: width,
         height: height,
-        backgroundColor: color || 'green',
+        resizeMode: 'contain',
       }}
     />
   );
