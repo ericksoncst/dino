@@ -9,6 +9,10 @@ const physics = (entities, { time, dispatch }) => {
   const delta = Math.min(time.delta, 1000 / 60);
   Matter.Engine.update(engine, delta);
 
+  const dino = entities.dino.body;
+  dino.position.x = 50;
+  dino.velocity.x = 0;
+
   if (!listenerAttached) {
     Matter.Events.on(engine, 'collisionStart', (event) => {
       event.pairs.forEach((pair) => {

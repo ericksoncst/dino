@@ -7,6 +7,7 @@ import Ground from './src/components/Ground';
 import jump from './src/actions/jump';
 import obstacleSpawner from './src/actions/obstacleSpawner';
 import physics, { resetCollisionState } from './src/actions/physics';
+import scrollGround from './src/actions/scrollGround';
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
@@ -19,7 +20,15 @@ export default function App() {
     const engine = Matter.Engine.create({ enableSleeping: false });
     const world = engine.world;
 
-    const dino = Matter.Bodies.rectangle(50, HEIGHT - 100, 50, 50, { label: 'Dino' });
+    const dino = Matter.Bodies.rectangle(50, HEIGHT - 100, 50, 50, { 
+      label: 'Dino',
+      inertia: Infinity,
+      frictionAir: 0.0,
+    });
+    
+    dino.plugin = {
+      constrainX: true,
+    };
     const ground = Matter.Bodies.rectangle(WIDTH / 2, HEIGHT - 25, WIDTH, 50, {
       isStatic: true,
       label: 'Ground',
