@@ -8,6 +8,7 @@ import jump from './src/actions/jump';
 import obstacleSpawner from './src/actions/obstacleSpawner';
 import physics, { resetCollisionState } from './src/actions/physics';
 import scrollGround from './src/actions/scrollGround';
+import animationSystem from './src/actions/animationSystem';
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
@@ -15,7 +16,6 @@ export default function App() {
   const [running, setRunning] = useState(false);
   const [gameEntities, setGameEntities] = useState({});
   const [startText, setStartText] = useState('Start Game')
-  const [startGame, setStartGame] = useState(false)
   const [gameOver, setGameOver] = useState(false)
   const gameEngine = useRef(null);
 
@@ -65,11 +65,11 @@ export default function App() {
  const restart = () => {
   resetCollisionState();
   const newEntities = setupWorld();
+  newEntities.dino.running = true;
   setGameEntities(newEntities);
   gameEngine.current.swap(newEntities);
   setRunning(true);
-  setStartGame(true)
-};
+ }
 
   return (
     <View style={styles.container}>
@@ -77,7 +77,7 @@ export default function App() {
         <GameEngine
           ref={gameEngine}
           style={styles.gameContainer}
-          systems={[physics, jump, obstacleSpawner, scrollGround]}
+          systems={[physics, jump, obstacleSpawner, scrollGround, animationSystem]}
           entities={gameEntities}
           running={running}
           onEvent={(e) => {
@@ -85,6 +85,13 @@ export default function App() {
               setRunning(false);
               setStartText('Restart Game')
               setGameOver(true)
+              setGameEntities((prev) => ({
+                ...prev,
+                dino: {
+                  ...prev.dino,
+                  running: false,
+                },
+              }));
             }
           }}
         />
