@@ -1,22 +1,13 @@
-import Matter from 'matter-js';
-
 const SPEED = 2;
 
-const scrollGround = (entities) => {
-  const ground = entities.ground.body;
+const scrollGround = (entities, { time }) => {
+  const ground = entities.ground;
+  const groundWidth = ground.body.bounds.max.x - ground.body.bounds.min.x;
   
-  // Move o chão para a esquerda
-  Matter.Body.setPosition(ground, {
-    x: ground.position.x - SPEED,
-    y: ground.position.y
-  });
-
-  // Reseta a posição quando sair completamente da tela
-  if (ground.position.x < -entities.ground.body.bounds.max.x / 2) {
-    Matter.Body.setPosition(ground, {
-      x: entities.ground.body.bounds.max.x / 2,
-      y: ground.position.y
-    });
+  ground.scrollX = (ground.scrollX || 0) + SPEED;
+  
+  if (ground.scrollX >= groundWidth) {
+    ground.scrollX = 0;
   }
 
   return entities;

@@ -12,8 +12,11 @@ import scrollGround from './src/actions/scrollGround';
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
 export default function App() {
-  const [running, setRunning] = useState(true);
+  const [running, setRunning] = useState(false);
   const [gameEntities, setGameEntities] = useState({});
+  const [startText, setStartText] = useState('Start Game')
+  const [startGame, setStartGame] = useState(false)
+  const [gameOver, setGameOver] = useState(false)
   const gameEngine = useRef(null);
 
   const setupWorld = () => {
@@ -29,17 +32,29 @@ export default function App() {
     dino.plugin = {
       constrainX: true,
     };
-    const ground = Matter.Bodies.rectangle(WIDTH / 2, HEIGHT - 25, WIDTH, 50, {
-      isStatic: true,
-      label: 'Ground',
-    });
+  
+      const ground = Matter.Bodies.rectangle(
+        WIDTH / 2,
+        HEIGHT - 25, 
+        WIDTH,
+        50, 
+        {
+          isStatic: true,
+          label: 'Ground',
+        }
+      );
 
     Matter.World.add(world, [dino, ground]);
 
     return {
       physics: { engine: engine, world: world },
       dino: { body: dino, color: 'green', renderer: Dino },
-      ground: { body: ground, color: 'black', renderer: Ground },
+      ground: { 
+      body: ground, 
+      color: 'black', 
+      renderer: Ground,
+      scrollX: 0 
+    },
     };
   };
 
@@ -53,6 +68,7 @@ export default function App() {
   setGameEntities(newEntities);
   gameEngine.current.swap(newEntities);
   setRunning(true);
+  setStartGame(true)
 };
 
   return (
@@ -67,15 +83,17 @@ export default function App() {
           onEvent={(e) => {
             if (e.type === 'game-over') {
               setRunning(false);
+              setStartText('Restart Game')
+              setGameOver(true)
             }
           }}
         />
       )}
       {!running && (
         <View style={{ justifyContent: 'space-around', alignItems: 'center',}}>
-          <Text style={styles.gameOverText}>Game Over</Text>
+          {gameOver &&  <Text style={styles.gameOverText}>Game Over</Text>}
           <TouchableOpacity style={styles.fullScreenButton} onPress={restart}>
-            <Text style={styles.fullScreenText}>RESTART</Text>
+            <Text style={styles.fullScreenText}>{startText}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -98,5 +116,5 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   fullScreenText: { color: 'white', fontSize: 20 },
-  gameOverText: { color: 'black', fontSize: 20, marginTop: HEIGHT / 3 },
+  gameOverText: { color: 'black', fontSize: 20, marginTop: HEIGHT / 4, letterSpacing: 2 },
 });
