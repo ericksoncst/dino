@@ -23,7 +23,7 @@ export default function App() {
     const engine = Matter.Engine.create({ enableSleeping: false });
     const world = engine.world;
 
-    const dino = Matter.Bodies.rectangle(50, HEIGHT - 100, 50, 50, { 
+    const dino = Matter.Bodies.rectangle(60, HEIGHT - 100, 50, 50, { 
       label: 'Dino',
       inertia: Infinity,
       frictionAir: 0.0,
@@ -72,38 +72,38 @@ export default function App() {
  }
 
   return (
-    <View style={styles.container}>
-      {Object.keys(gameEntities).length > 0 && (
-        <GameEngine
-          ref={gameEngine}
-          style={styles.gameContainer}
-          systems={[physics, jump, obstacleSpawner, scrollGround, animationSystem]}
-          entities={gameEntities}
-          running={running}
-          onEvent={(e) => {
-            if (e.type === 'game-over') {
-              setRunning(false);
-              setStartText('Restart Game')
-              setGameOver(true)
-              setGameEntities((prev) => ({
-                ...prev,
-                dino: {
-                  ...prev.dino,
-                  running: false,
-                },
-              }));
-            }
-          }}
-        />
-      )}
-      {!running && (
-        <View style={{ justifyContent: 'space-around', alignItems: 'center',}}>
-          {gameOver &&  <Text style={styles.gameOverText}>Game Over</Text>}
-          <TouchableOpacity style={styles.fullScreenButton} onPress={restart}>
-            <Text style={styles.fullScreenText}>{startText}</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <View style={styles.container}>
+        {Object.keys(gameEntities).length > 0 && (
+          <GameEngine
+            ref={gameEngine}
+            style={styles.gameContainer}
+            systems={[physics, jump, obstacleSpawner, scrollGround, animationSystem]}
+            entities={gameEntities}
+            running={running}
+            onEvent={(e) => {
+              if (e.type === 'game-over') {
+                setRunning(false);
+                setStartText('Restart Game')
+                setGameOver(true)
+                setGameEntities((prev) => ({
+                  ...prev,
+                  dino: {
+                    ...prev.dino,
+                    running: false,
+                  },
+                }));
+              }
+            }}
+          />
+        )}
+        {!running && (
+          <View style={{ justifyContent: 'space-around', alignItems: 'center',}}>
+            {gameOver &&  <Text style={styles.gameOverText}>Game Over</Text>}
+            <TouchableOpacity style={styles.fullScreenButton} onPress={restart}>
+              <Text style={styles.fullScreenText}>{startText}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
     </View>
   );
 }

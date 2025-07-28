@@ -14,7 +14,7 @@ const jump = (entities, { touches }) => {
       if (Math.abs(dino.velocity.y) < 0.01) {
         Matter.Body.setVelocity(dino, {
           x: dino.velocity.x,
-          y: -10,
+          y: -9,
         });
       }
     });
