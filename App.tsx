@@ -61,7 +61,7 @@ export default function App() {
         <GameEngine
           ref={gameEngine}
           style={styles.gameContainer}
-          systems={[physics, jump, obstacleSpawner]}
+          systems={[physics, jump, obstacleSpawner, scrollGround]}
           entities={gameEntities}
           running={running}
           onEvent={(e) => {

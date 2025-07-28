@@ -1,14 +1,25 @@
-const scrollSpeed = 5;
+import Matter from 'matter-js';
 
-export default function scrollGround(entities, { time }) {
-  const ground = entities.ground;
-  const body = ground.body;
+const SPEED = 2;
 
-  body.position.x -= scrollSpeed;
+const scrollGround = (entities) => {
+  const ground = entities.ground.body;
+  
+  // Move o chão para a esquerda
+  Matter.Body.setPosition(ground, {
+    x: ground.position.x - SPEED,
+    y: ground.position.y
+  });
 
-  if (body.position.x < -ground.body.bounds.max.x / 2) {
-    body.position.x = ground.body.bounds.max.x / 2;
+  // Reseta a posição quando sair completamente da tela
+  if (ground.position.x < -entities.ground.body.bounds.max.x / 2) {
+    Matter.Body.setPosition(ground, {
+      x: entities.ground.body.bounds.max.x / 2,
+      y: ground.position.y
+    });
   }
 
   return entities;
-}
+};
+
+export default scrollGround;

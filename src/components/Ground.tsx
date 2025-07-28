@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 
-export default function Ground({ body, color }) {
+export default function Ground({ body, offsetX = 0 }) {
   if (!body || !body.position || !body.bounds) return null;
 
   const width = body.bounds.max.x - body.bounds.min.x;
@@ -11,16 +11,15 @@ export default function Ground({ body, color }) {
 
   return (
     <Image
-          source={require('../assets/images/ground.png')}
-          style={{
-            position: 'absolute',
-            left: x,
-            top: y,
-            width,
-            height,
-            resizeMode: 'contain',
-          }}
-        />
-
+      source={require('../assets/images/ground.png')}
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: width * 2, // Renderiza o dobro da largura
+        height,
+        resizeMode: 'contain',
+      }}
+    />
   );
 }
