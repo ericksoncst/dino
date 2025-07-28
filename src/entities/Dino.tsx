@@ -8,7 +8,7 @@ const images = [
 
 export default function Dino({ body, frame = 0, running, isJumping }) {
   console.log(isJumping)
-  const width = 40;
+  const width = 50;
   const height = 50;
   const x = body.position.x - width / 2;
   const y = body.position.y - height / 6;

@@ -10,10 +10,12 @@ const obstacleSpawner = (entities, { time, dispatch }) => {
   const world = entities.physics.world;
 
   if (time.current >= nextObstacleTime) {
-    const obstacleWidth = 40;
+    const groundHeight = 50;
     const obstacleHeight = 40;
+    const obstacleWidth = 20; // Ajuste visual mais justo
+
     const x = WIDTH + obstacleWidth / 2;
-    const y = HEIGHT - 50 - obstacleHeight / 2;
+    const y = HEIGHT - groundHeight - obstacleHeight / 2;
 
     const obstacle = Matter.Bodies.rectangle(
       x,
@@ -22,7 +24,6 @@ const obstacleSpawner = (entities, { time, dispatch }) => {
       obstacleHeight,
       { isStatic: true, label: 'Obstacle' }
     );
-
     Matter.World.add(world, [obstacle]);
 
     entities['obstacle_' + time.current] = {

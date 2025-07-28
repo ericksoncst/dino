@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { GameEngine } from 'react-native-game-engine';
 import Matter from 'matter-js';
-import Dino from './src/components/Dino';
-import Ground from './src/components/Ground';
-import jump from './src/actions/jump';
-import obstacleSpawner from './src/actions/obstacleSpawner';
-import physics, { resetCollisionState } from './src/actions/physics';
-import scrollGround from './src/actions/scrollGround';
-import animationSystem from './src/actions/animationSystem';
+import Dino from './src/entities/Dino';
+import Ground from './src/entities/Ground';
+import jump from './src/systems/jump';
+import obstacleSpawner from './src/systems/obstacleSpawner';
+import physics, { resetCollisionState } from './src/systems/physics';
+import scrollGround from './src/systems/scrollGround';
+import animationSystem from './src/systems/animationSystem';
 
 const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
 
@@ -109,7 +109,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
+  container: { flex: 1, },
   gameContainer: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, flex: 1 },
   fullScreenButton: {
     position: 'absolute',
@@ -123,5 +123,5 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   fullScreenText: { color: 'white', fontSize: 20 },
-  gameOverText: { color: 'black', fontSize: 20, marginTop: HEIGHT / 4, letterSpacing: 2 },
+  gameOverText: { color: 'black', fontSize: 20, marginTop: HEIGHT / 4, letterSpacing: 2, fontWeight: 'bold' },
 });
