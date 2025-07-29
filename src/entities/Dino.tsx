@@ -2,6 +2,12 @@ import Matter from 'matter-js';
 import React from 'react';
 import { Image, View } from 'react-native';
 
+const dinoFrames = [
+    require('../assets/images/standing_still.png'), 
+    require('../assets/images/dino_run1.png'),      
+    require('../assets/images/dino_run2.png')
+];
+
 const Dino = props => {
   const width = props.originalSize[0];
   const height = props.originalSize[1];
@@ -9,6 +15,9 @@ const Dino = props => {
   const y = props.body.position.y - height / 2;
 
   const yOffset = 10;
+
+    const imageSource = dinoFrames[props.animIndex];
+
 
   return (
     <Image
@@ -21,7 +30,7 @@ const Dino = props => {
         // borderColor: 'red',
         // borderWidth: 1
       }}
-      source={require('../assets/images/standing_still.png')}
+      source={imageSource}
     />
   );
 };
@@ -42,6 +51,10 @@ export default (world, pos, size, originalSize) => {
     size: [size.width, size.height],
     originalSize: [originalSize.width, originalSize.height],
     isGrounded: true,
+    dinoFrames: dinoFrames, // Passa os frames para a entidade
+    animIndex: 0,           // Índice do frame atual (começa parado)
+    animTick: 0,            // Contador para controlar a velocidade da animação
+    animFrameDuration: 15,
     renderer: <Dino />,
   };
 };

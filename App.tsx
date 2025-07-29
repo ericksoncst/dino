@@ -9,6 +9,7 @@ import Physics from './src/systems/Physics';
 import TouchControl from './src/systems/TouchControl';
 import GroundMovement from './src/systems/GroundMovement';
 import CactusSystem from './src/systems/CactusSystem';
+import AnimationSystem from './src/systems/AnimationSystem';
 
 export default class App extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ export default class App extends Component {
     this.entities = this.setupWorld();
 
     this.state = {
-        running: true
+        running: false,
+        gameOver: false
     };
   }
 
@@ -76,13 +78,13 @@ export default class App extends Component {
 
   onEvent = (e) => {
       if (e.type === "game-over") {
-          this.setState({ running: false });
+          this.setState({ running: false, gameOver: true });
       }
   }
 
   reset = () => {
     this.gameEngine.swap(this.setupWorld());
-    this.setState({ running: true });
+    this.setState({ running: true, gameOver: false });
   }
 
   render() {
@@ -93,18 +95,16 @@ export default class App extends Component {
           <GameEngine
             ref={ref => { this.gameEngine = ref; }}
             style={styles.gameContainer}
-            systems={[Physics, TouchControl, GroundMovement, CactusSystem]}
+            systems={[Physics, TouchControl, GroundMovement, CactusSystem, AnimationSystem]}
             entities={this.entities}
-            // 5. Props para controlar e ouvir o motor
             running={this.state.running}
             onEvent={this.onEvent}
           />
-          {/* 6. Tela de Game Over (só aparece se o jogo não estiver rodando) */}
           {!this.state.running && (
               <TouchableOpacity style={styles.fullScreenButton} onPress={this.reset}>
                   <View style={styles.gameOverContainer}>
-                      <Text style={styles.gameOverText}>Game Over</Text>
-                      <Text style={styles.restartText}>Tap to Restart</Text>
+                      <Text style={styles.gameOverText}>{this.state.gameOver ? "Game Over" : "Welcome 🦖"}</Text>
+                      <Text style={styles.restartText}>{this.state.gameOver ? "Tap to Restart" : "Start Game"}</Text>
                   </View>
               </TouchableOpacity>
           )}
