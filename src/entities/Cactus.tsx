@@ -9,27 +9,27 @@ const cactusImages = {
 };
 
 const CactusComponent = props => {
-  const width = props.size[0];
-  const height = props.size[1];
+  const width = props.originalSize[0]; 
+  const height = props.originalSize[1];
   const x = props.body.position.x - width / 2;
-  const y = props.body.position.y - height / 2;
+  const y = props.body.position.y - height / 2 + 20;
   const cactusType = props.cactusType;
 
-  let visualYOffset = 0; 
-  switch (cactusType) {
-    case 1:
-      visualYOffset = 25; 
-      break;
-    case 2:
-      visualYOffset = 35;
-      break;
-    case 3:
-      visualYOffset = 40;
-      break;
-    default:
-      visualYOffset = 30;
-      break;
-  }
+  // let visualYOffset = 0; 
+  // switch (cactusType) {
+  //   case 1:
+  //     visualYOffset = 25; 
+  //     break;
+  //   case 2:
+  //     visualYOffset = 35;
+  //     break;
+  //   case 3:
+  //     visualYOffset = 40;
+  //     break;
+  //   default:
+  //     visualYOffset = 30;
+  //     break;
+  // }
 
 
   return (
@@ -37,7 +37,7 @@ const CactusComponent = props => {
       style={{
         position: 'absolute',
         left: x,
-        top: y + visualYOffset,
+        top: y,
         width: width,
         height: height,
         resizeMode: 'contain',

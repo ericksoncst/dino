@@ -7,7 +7,7 @@ const TouchControl = (entities, { touches, time }) => {
     const dino = entities.dino;
     if (dino.isGrounded) {
       Matter.Body.setVelocity(dino.body, { x: dino.body.velocity.x, y: -12 });
-      dino.isGrounded = false;
+      // dino.isGrounded = false;
     }
   }
 

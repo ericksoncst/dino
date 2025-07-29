@@ -13,9 +13,7 @@ const Physics = (entities, { time, dispatch }) => {
       Matter.Collision.collides(dino.body, ground1.body) ||
       Matter.Collision.collides(dino.body, ground2.body);
 
-  if (isCollidingWithGround) {
-    dino.isGrounded = true;
-  }
+  dino.isGrounded = isCollidingWithGround
 
   for (const key in entities) {
     if (key.startsWith('obstacle_')) {

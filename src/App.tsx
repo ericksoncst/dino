@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GameEngine } from 'react-native-game-engine';
 import Matter from 'matter-js';
-import { Constants } from './src/utils/constants';
-import Dino from './src/entities/Dino';
-import Ground from './src/entities/Ground';
-import Physics from './src/systems/Physics';
-import TouchControl from './src/systems/TouchControl';
-import GroundMovement from './src/systems/GroundMovement';
-import CactusSystem from './src/systems/CactusSystem';
-import AnimationSystem from './src/systems/AnimationSystem';
+import { Constants } from './utils/constants';
+import Dino from './entities/Dino';
+import Ground from './entities/Ground';
+import Physics from './systems/Physics';
+import TouchControl from './systems/TouchControl';
+import GroundMovement from './systems/GroundMovement';
+import CactusSystem from './systems/CactusSystem';
+import AnimationSystem from './systems/AnimationSystem';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ScoringSystem from './src/systems/ScoringSystem';
+import ScoringSystem from './systems/ScoringSystem';
 
 export default class App extends Component {
   constructor(props) {
@@ -103,7 +103,7 @@ export default class App extends Component {
           <GameEngine
             ref={ref => { this.gameEngine = ref; }}
             style={styles.gameContainer}
-            systems={[Physics, TouchControl, GroundMovement, CactusSystem, AnimationSystem, ScoringSystem]}
+            systems={[TouchControl, Physics, GroundMovement, CactusSystem, AnimationSystem, ScoringSystem]}
             entities={this.entities}
             running={this.state.running}
             onEvent={this.onEvent}
@@ -111,7 +111,7 @@ export default class App extends Component {
           {!this.state.running && (
               <TouchableOpacity style={styles.fullScreenButton} onPress={this.reset}>
                   <View style={styles.gameOverContainer}>
-                      <Text style={styles.gameOverText}>{this.state.gameOver ? "Game Over" : "Welcome 🦖"}</Text>
+                      <Text style={styles.gameOverText}>{this.state.gameOver ? "Game Over" : "🦖🦖🦖"}</Text>
                       <Text style={styles.restartText}>{this.state.gameOver ? "Tap to Restart" : "Start Game"}</Text>
                   </View>
               </TouchableOpacity>
