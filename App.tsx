@@ -1,127 +1,72 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, { Component } from 'react';
+import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
 import { GameEngine } from 'react-native-game-engine';
 import Matter from 'matter-js';
+import { Constants } from './src/utils/constants';
 import Dino from './src/entities/Dino';
 import Ground from './src/entities/Ground';
-import jump from './src/systems/jump';
-import obstacleSpawner from './src/systems/obstacleSpawner';
-import physics, { resetCollisionState } from './src/systems/physics';
-import scrollGround from './src/systems/scrollGround';
-import animationSystem from './src/systems/animationSystem';
+import Physics from './src/systems/Physics';
+import TouchControl from './src/systems/TouchControl';
 
-const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.gameEngine = null;
+    this.entities = this.setupWorld();
+  }
 
-export default function App() {
-  const [running, setRunning] = useState(false);
-  const [gameEntities, setGameEntities] = useState({});
-  const [startText, setStartText] = useState('Start Game')
-  const [gameOver, setGameOver] = useState(false)
-  const gameEngine = useRef(null);
+  setupWorld = () => {
+    let engine = Matter.Engine.create({ enableSleeping: false });
+    let world = engine.world;
 
-  const setupWorld = () => {
-    const engine = Matter.Engine.create({ enableSleeping: false });
-    const world = engine.world;
+    world.gravity.y = 1.0;
 
-    const dino = Matter.Bodies.rectangle(60, HEIGHT - 100, 50, 50, { 
-      label: 'Dino',
-      inertia: Infinity,
-      frictionAir: 0.0,
-    });
-    
-    dino.plugin = {
-      constrainX: true,
-    };
-  
-      const ground = Matter.Bodies.rectangle(
-        WIDTH / 2,
-        HEIGHT - 25, 
-        WIDTH,
-        50, 
-        {
-          isStatic: true,
-          label: 'Ground',
-        }
-      );
+    let dino = Dino(
+        world,
+        { x: Constants.MAX_WIDTH / 4, y: Constants.MAX_HEIGHT / 2 },
+        { width: Constants.DINO_WIDTH, height: Constants.DINO_HEIGHT }
+    );
 
-    Matter.World.add(world, [dino, ground]);
+    let ground = Ground(
+        world,
+        { x: Constants.MAX_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
+        { width: Constants.MAX_WIDTH, height: Constants.GROUND_HEIGHT }
+    );
 
     return {
       physics: { engine: engine, world: world },
-      dino: { body: dino, color: 'green', renderer: Dino },
-      ground: { 
-      body: ground, 
-      color: 'black', 
-      renderer: Ground,
-      scrollX: 0 
-    },
+      dino: dino,
+      ground: ground,
     };
   };
 
-  useEffect(() => {
-    setGameEntities(setupWorld());
-  }, []);
-
- const restart = () => {
-  resetCollisionState();
-  const newEntities = setupWorld();
-  newEntities.dino.running = true;
-  setGameEntities(newEntities);
-  gameEngine.current.swap(newEntities);
-  setRunning(true);
- }
-
-  return (
+  render() {
+    return (
       <View style={styles.container}>
-        {Object.keys(gameEntities).length > 0 && (
+         <SafeAreaView style={styles.container}>
+          <StatusBar hidden={true} />
           <GameEngine
-            ref={gameEngine}
+            ref={ref => { this.gameEngine = ref; }}
             style={styles.gameContainer}
-            systems={[physics, jump, obstacleSpawner, scrollGround, animationSystem]}
-            entities={gameEntities}
-            running={running}
-            onEvent={(e) => {
-              if (e.type === 'game-over') {
-                setRunning(false);
-                setStartText('Restart Game')
-                setGameOver(true)
-                setGameEntities((prev) => ({
-                  ...prev,
-                  dino: {
-                    ...prev.dino,
-                    running: false,
-                  },
-                }));
-              }
-            }}
+            systems={[Physics, TouchControl]} 
+            entities={this.entities}
           />
-        )}
-        {!running && (
-          <View style={{ justifyContent: 'space-around', alignItems: 'center',}}>
-            {gameOver &&  <Text style={styles.gameOverText}>Game Over</Text>}
-            <TouchableOpacity style={styles.fullScreenButton} onPress={restart}>
-              <Text style={styles.fullScreenText}>{startText}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-    </View>
-  );
+      </SafeAreaView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, },
-  gameContainer: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, flex: 1 },
-  fullScreenButton: {
-    position: 'absolute',
-    top: HEIGHT / 2 - 50,
-    left: WIDTH / 2 - 100,
-    width: 200,
-    height: 100,
-    backgroundColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  fullScreenText: { color: 'white', fontSize: 20 },
-  gameOverText: { color: 'black', fontSize: 20, marginTop: HEIGHT / 4, letterSpacing: 2, fontWeight: 'bold' },
+  gameContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
 });

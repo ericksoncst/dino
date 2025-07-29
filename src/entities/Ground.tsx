@@ -1,40 +1,45 @@
+import Matter from 'matter-js';
 import React from 'react';
 import { Image } from 'react-native';
 
-export default function Ground({ body, scrollX }) {
-  if (!body || !body.position || !body.bounds) return null;
-
-  const width = body.bounds.max.x - body.bounds.min.x;
-  const height = body.bounds.max.y - body.bounds.min.y;
-  const y = body.position.y - height;
-  const imageWidth = width;
-
-  const offset = scrollX % imageWidth;
+const GroundComponent = props => {
+  const width = props.size[0];
+  const height = props.size[1];
+  const x = props.body.position.x - width / 2;
+  const y = props.body.position.y - height / 2;
 
   return (
-    <>
-      <Image
-        source={require('../assets/images/ground.png')}
-        style={{
-          position: 'absolute',
-          left: -offset,
-          top: y,
-          width: imageWidth,
-          height,
-          resizeMode: 'contain',
-        }}
-      />
-      <Image
-        source={require('../assets/images/ground.png')}
-        style={{
-          position: 'absolute',
-          left: imageWidth - offset,
-          top: y,
-          width: imageWidth,
-          height,
-          resizeMode: 'contain',
-        }}
-      />
-    </>
+    <Image
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: width,
+        height: height,
+        resizeMode: 'stretch'
+      }}
+      source={require('../assets/images/ground.png')}
+    />
   );
-}
+};
+
+export default (world, pos, size) => {
+  const initialGround = Matter.Bodies.rectangle(
+    pos.x,
+    pos.y,
+    size.width,
+    size.height,
+    { 
+        label: 'Ground',
+        isStatic: true
+    }
+  );
+  Matter.World.add(world, initialGround);
+
+  return {
+    body: initialGround,
+    pos,
+    size: [size.width, size.height],
+    renderer: <GroundComponent />,
+  };
+};
