@@ -11,6 +11,9 @@ import GroundMovement from './src/systems/GroundMovement';
 import CactusSystem from './src/systems/CactusSystem';
 import AnimationSystem from './src/systems/AnimationSystem';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ScoringSystem from './src/systems/ScoringSystem';
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -19,15 +22,34 @@ export default class App extends Component {
 
     this.state = {
         running: false,
-        gameOver: false
+        gameOver: false,
+        score: 0,
+        highScore: 0
     };
+  }
+
+  async componentDidMount() {
+      this.entities = this.setupWorld();
+      const storedHighScore = await AsyncStorage.getItem('highScore');
+      if (storedHighScore !== null) {
+          this.setState({ highScore: parseInt(storedHighScore, 10) });
+      }
+      this.forceUpdate();
   }
 
   setupWorld = () => {
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
 
-    // world.gravity.y = 1.0;
+    world.gravity.y = 0.9;
+
+     let gameStatus = {
+        speed: Constants.GROUND_SPEED, // Velocidade inicial
+        score: 0,
+        scoreTimer: 0,
+        scoreInterval: 100, // Ganha 1 ponto a cada 100ms
+        spawnTimer: Constants.OBSTACLE_INTERVAL_MIN,
+    };
 
     const dinoSize = { width: Constants.DINO_WIDTH, height: Constants.DINO_HEIGHT };
     const dinoHitbox = { 
@@ -54,7 +76,7 @@ export default class App extends Component {
         { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT }
     );
 
-    // O chão 2
+    
     let ground2 = Ground(
         world,
         { x: Constants.GROUND_WIDTH + (Constants.GROUND_WIDTH / 2), y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - Constants.GROUND_Y_OFFSET }, // <-- Modifique esta linha
@@ -68,23 +90,32 @@ export default class App extends Component {
 
     return {
       physics: { engine: engine, world: world },
-      dino: dino,
+      dino,
       // ground: ground,
-      ground1: ground1,
-      ground2: ground2,
-      cactusSpawner: cactusSpawner
+      ground1,
+      ground2,
+      cactusSpawner,
+      gameStatus
     };
   };
 
-  onEvent = (e) => {
-      if (e.type === "game-over") {
+  onEvent = async (e) => {
+     if (e.type === "score-updated") {
+        this.setState({ score: e.score });
+    } else if (e.type === "game-over") {
+          this.entities.dino.animIndex = 0;
           this.setState({ running: false, gameOver: true });
-      }
+
+          if (this.state.score > this.state.highScore) {
+            this.setState({ highScore: this.state.score });
+            await AsyncStorage.setItem('highScore', this.state.score.toString());
+        }
+    }
   }
 
   reset = () => {
     this.gameEngine.swap(this.setupWorld());
-    this.setState({ running: true, gameOver: false });
+    this.setState({ running: true, gameOver: false, score: 0 });
   }
 
   render() {
@@ -92,10 +123,14 @@ export default class App extends Component {
       <View style={styles.container}>
          <SafeAreaView style={styles.container}>
           <StatusBar hidden={true} />
+           <View style={styles.scoreContainer}>
+              <Text style={styles.scoreText}>HI {this.state.highScore.toString().padStart(5, '0')}</Text>
+              <Text style={styles.scoreText}>{this.state.score.toString().padStart(5, '0')}</Text>
+          </View>
           <GameEngine
             ref={ref => { this.gameEngine = ref; }}
             style={styles.gameContainer}
-            systems={[Physics, TouchControl, GroundMovement, CactusSystem, AnimationSystem]}
+            systems={[Physics, TouchControl, GroundMovement, CactusSystem, AnimationSystem, ScoringSystem]}
             entities={this.entities}
             running={this.state.running}
             onEvent={this.onEvent}
@@ -147,5 +182,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
     marginTop: 10,
+  },
+  scoreContainer: {
+    position: 'absolute',
+    top: 30,
+    right: 30,
+    flexDirection: 'row',
+    zIndex: 1,
+  },
+  scoreText: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      color: '#525252',
+      marginLeft: 15,
   }
 });

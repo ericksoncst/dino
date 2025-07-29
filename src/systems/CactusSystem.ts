@@ -2,9 +2,9 @@ import Matter from 'matter-js';
 import { Constants } from '../utils/constants';
 import Cactus from '../entities/Cactus';
 
-let obstacleCount = 0; // Contador para dar chaves únicas aos novos cactos
+let obstacleCount = 0;
 
-// Função para gerar um número aleatório em um intervalo
+
 const randomBetween = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
@@ -13,13 +13,14 @@ const CactusSystem = (entities, { time, dispatch }) => {
   const engine = entities.physics.engine;
   const world = entities.physics.world;
   const spawner = entities.cactusSpawner;
+  const status = entities.gameStatus;
 
-  // 1. Mover e remover cactos existentes
+  //Mover e remover cactos existentes
   Object.keys(entities).forEach(key => {
     if (key.startsWith('obstacle_')) {
       const cactus = entities[key];
       // Mover para a esquerda
-      Matter.Body.translate(cactus.body, { x: -Constants.GROUND_SPEED, y: 0 });
+      Matter.Body.translate(cactus.body, { x: -status.speed, y: 0 });
 
       // Remover se saiu da tela
       if (cactus.body.position.x < -Constants.CACTUS_WIDTH / 2) {
@@ -29,7 +30,7 @@ const CactusSystem = (entities, { time, dispatch }) => {
     }
   });
 
-  // 2. Gerar novos cactos
+  // Gerar novos cactos
   spawner.spawnTimer -= time.delta;
   if (spawner.spawnTimer <= 0) {
 

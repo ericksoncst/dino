@@ -10,7 +10,7 @@ export const Constants = {
     GROUND_Y_OFFSET: 80,
     GROUND_HEIGHT: 24,
     GROUND_WIDTH: 2400,
-    GROUND_SPEED: 4,
+    GROUND_SPEED: 2,
 
     CACTUS_WIDTH: 40,
     CACTUS_HEIGHT: 80,

@@ -3,6 +3,7 @@ import { Constants } from '../utils/constants';
 
 const GroundMovement = (entities, { time }) => {
   const engine = entities.physics.engine;
+  const speed = entities.gameStatus.speed;
 
   // Itera sobre os dois pedaços de chão
   for (let i = 1; i <= 2; i++) {
@@ -10,7 +11,7 @@ const GroundMovement = (entities, { time }) => {
 
     if (ground) {
       // Move o chão para a esquerda
-      Matter.Body.translate(ground.body, { x: -Constants.GROUND_SPEED, y: 0 });
+      Matter.Body.translate(ground.body, { x: -speed, y: 0 });
 
       // Verifica se o chão saiu completamente da tela pela esquerda
       // A posição é o centro do corpo, então verificamos se o centro mais metade da largura é < 0
@@ -24,9 +25,6 @@ const GroundMovement = (entities, { time }) => {
       }
     }
   }
-
-  // A física geral continua sendo atualizada no sistema de Física principal
-  // Matter.Engine.update(engine, time.delta);
 
   return entities;
 };
