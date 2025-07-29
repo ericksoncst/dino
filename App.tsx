@@ -43,13 +43,6 @@ export default class App extends Component {
 
     world.gravity.y = 0.9;
 
-     let gameStatus = {
-        speed: Constants.GROUND_SPEED, // Velocidade inicial
-        score: 0,
-        scoreTimer: 0,
-        scoreInterval: 100, // Ganha 1 ponto a cada 100ms
-        spawnTimer: Constants.OBSTACLE_INTERVAL_MIN,
-    };
 
     const dinoSize = { width: Constants.DINO_WIDTH, height: Constants.DINO_HEIGHT };
     const dinoHitbox = { 
@@ -58,40 +51,20 @@ export default class App extends Component {
     };
 
     let dino = Dino(
-       world,
+        world,
         { x: Constants.MAX_WIDTH / 4, y: Constants.MAX_HEIGHT / 2 },
-        dinoHitbox,
-        dinoSize
+        { width: Constants.DINO_WIDTH * 0.8, height: Constants.DINO_HEIGHT * 0.9 },
+        { width: Constants.DINO_WIDTH, height: Constants.DINO_HEIGHT }
     );
+    let ground1 = Ground(world, { x: Constants.GROUND_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - Constants.GROUND_Y_OFFSET }, { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT });
+    let ground2 = Ground(world, { x: Constants.GROUND_WIDTH + (Constants.GROUND_WIDTH / 2), y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - Constants.GROUND_Y_OFFSET }, { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT });
+    let cactusSpawner = { spawnTimer: Constants.OBSTACLE_INTERVAL_MIN, renderer: null };
+    let gameStatus = { speed: Constants.GROUND_SPEED, score: 0, scoreTimer: 0, scoreInterval: 100, spawnTimer: Constants.OBSTACLE_INTERVAL_MIN };
 
-    // let ground = Ground(
-    //     world,
-    //     { x: Constants.MAX_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
-    //     { width: Constants.MAX_WIDTH, height: Constants.GROUND_HEIGHT }
-    // );
-
-     let ground1 = Ground(
-        world,
-        { x: Constants.GROUND_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - Constants.GROUND_Y_OFFSET }, // <-- Modifique esta linha
-        { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT }
-    );
-
-    
-    let ground2 = Ground(
-        world,
-        { x: Constants.GROUND_WIDTH + (Constants.GROUND_WIDTH / 2), y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - Constants.GROUND_Y_OFFSET }, // <-- Modifique esta linha
-        { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT }
-    );
-
-    let cactusSpawner = {
-        spawnTimer: Constants.OBSTACLE_INTERVAL_MIN,
-        renderer: null
-    };
 
     return {
       physics: { engine: engine, world: world },
       dino,
-      // ground: ground,
       ground1,
       ground2,
       cactusSpawner,

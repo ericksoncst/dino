@@ -2,25 +2,30 @@ import Matter from 'matter-js';
 
 const Physics = (entities, { time, dispatch }) => {
   let engine = entities.physics.engine;
-   const delta = Math.min(time.delta, 1000 / 60);
+  const delta = Math.min(time.delta, 1000 / 60);
 
-  Matter.Events.on(engine, 'collisionStart', (event) => {
-    let pairs = event.pairs;
+  // --- Verificação de Colisão Manual ---
+  const dino = entities.dino;
+  const ground1 = entities.ground1;
+  const ground2 = entities.ground2;
 
-    pairs.forEach((pair) => {
-      const { bodyA, bodyB } = pair;
+  const isCollidingWithGround = 
+      Matter.Collision.collides(dino.body, ground1.body) ||
+      Matter.Collision.collides(dino.body, ground2.body);
 
-      if ((bodyA.label === 'Dino' && bodyB.label === 'Ground') ||
-          (bodyA.label === 'Ground' && bodyB.label === 'Dino')) {
-        entities.dino.isGrounded = true;
+  if (isCollidingWithGround) {
+    dino.isGrounded = true;
+  }
+
+  for (const key in entities) {
+    if (key.startsWith('obstacle_')) {
+      const obstacle = entities[key];
+      if (Matter.Collision.collides(dino.body, obstacle.body)) {
+        dispatch({ type: 'game-over' });
+        break; 
       }
-
-      if ((bodyA.label === 'Dino' && bodyB.label === 'Obstacle') ||
-          (bodyA.label === 'Obstacle' && bodyB.label === 'Dino')) {
-        dispatch({ type: "game-over" });
-      }
-    });
-  });
+    }
+  }
 
   Matter.Engine.update(engine, delta);
 

@@ -1,14 +1,12 @@
 import Matter from 'matter-js';
 
 const TouchControl = (entities, { touches, time }) => {
-
-    let jumpPress = touches.find(x => x.type === 'press');
+  let jumpPress = touches.find(x => x.type === 'press');
 
   if (jumpPress) {
     const dino = entities.dino;
-
     if (dino.isGrounded) {
-      Matter.Body.applyForce(dino.body, dino.body.position, { x: 0.0, y: -0.10 });
+      Matter.Body.setVelocity(dino.body, { x: dino.body.velocity.x, y: -12 });
       dino.isGrounded = false;
     }
   }
