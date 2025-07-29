@@ -32,6 +32,14 @@ const CactusSystem = (entities, { time, dispatch }) => {
   // 2. Gerar novos cactos
   spawner.spawnTimer -= time.delta;
   if (spawner.spawnTimer <= 0) {
+
+    const originalSize = { width: Constants.CACTUS_WIDTH, height: Constants.CACTUS_HEIGHT };
+
+    const hitboxSize = { 
+      width: originalSize.width * 0.7, 
+      height: originalSize.height * 0.9
+    };
+
     // Resetar o timer com um valor aleatório
     spawner.spawnTimer = randomBetween(Constants.OBSTACLE_INTERVAL_MIN, Constants.OBSTACLE_INTERVAL_MAX);
 
@@ -40,12 +48,10 @@ const CactusSystem = (entities, { time, dispatch }) => {
     const newCactusKey = 'obstacle_' + obstacleCount++;
     const newCactus = Cactus(
       world,
-      // Posição inicial: fora da tela, à direita
-      {  x: Constants.MAX_WIDTH + (Constants.CACTUS_WIDTH / 2), 
-        y: Constants.MAX_HEIGHT - Constants.GROUND_HEIGHT - (Constants.CACTUS_HEIGHT / 2) - Constants.GROUND_Y_OFFSET // <-- Modifique esta linha
-      },
-      { width: Constants.CACTUS_WIDTH, height: Constants.CACTUS_HEIGHT },
-      cactusType
+      { x: Constants.MAX_WIDTH + (originalSize.width / 2), y: Constants.MAX_HEIGHT - Constants.GROUND_HEIGHT - (originalSize.height / 2) - Constants.GROUND_Y_OFFSET },
+       hitboxSize,
+        cactusType,
+        originalSize 
     );
 
     entities[newCactusKey] = newCactus;

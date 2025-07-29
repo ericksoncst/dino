@@ -40,14 +40,16 @@ const CactusComponent = props => {
         top: y + visualYOffset,
         width: width,
         height: height,
-        resizeMode: 'contain'
+        resizeMode: 'contain',
+        // borderColor:  'red',
+        // borderWidth: 1
       }}
       source={cactusImages[cactusType]}
     />
   );
 };
 
-export default (world, pos, size, cactusType) => {
+export default (world, pos, size, cactusType, originalSize) => {
   const initialCactus = Matter.Bodies.rectangle(
     pos.x,
     pos.y,
@@ -65,6 +67,7 @@ export default (world, pos, size, cactusType) => {
     pos,
     size: [size.width, size.height],
     cactusType: cactusType,
+    originalSize: [originalSize.width, originalSize.height],
     renderer: <CactusComponent />,
   };
 };
