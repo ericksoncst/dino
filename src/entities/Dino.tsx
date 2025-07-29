@@ -8,12 +8,14 @@ const Dino = props => {
   const x = props.body.position.x - width / 2;
   const y = props.body.position.y - height / 2;
 
+  const yOffset = 15;
+
   return (
     <Image
       style={{
         position: 'absolute',
         left: x,
-        top: y,
+        top: y + yOffset,
         width: width,
         height: height,
       }}

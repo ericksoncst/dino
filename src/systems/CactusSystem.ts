@@ -41,7 +41,9 @@ const CactusSystem = (entities, { time, dispatch }) => {
     const newCactus = Cactus(
       world,
       // Posição inicial: fora da tela, à direita
-      { x: Constants.MAX_WIDTH + (Constants.CACTUS_WIDTH / 2), y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - (Constants.CACTUS_HEIGHT / 2) },
+      {  x: Constants.MAX_WIDTH + (Constants.CACTUS_WIDTH / 2), 
+        y: Constants.MAX_HEIGHT - Constants.GROUND_HEIGHT - (Constants.CACTUS_HEIGHT / 2) - Constants.GROUND_Y_OFFSET // <-- Modifique esta linha
+      },
       { width: Constants.CACTUS_WIDTH, height: Constants.CACTUS_HEIGHT },
       cactusType
     );

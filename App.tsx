@@ -35,15 +35,16 @@ export default class App extends Component {
     //     { width: Constants.MAX_WIDTH, height: Constants.GROUND_HEIGHT }
     // );
 
-    let ground1 = Ground(
+     let ground1 = Ground(
         world,
-        { x: Constants.GROUND_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
+        { x: Constants.GROUND_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - Constants.GROUND_Y_OFFSET }, // <-- Modifique esta linha
         { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT }
     );
 
+    // O chão 2
     let ground2 = Ground(
         world,
-        { x: Constants.GROUND_WIDTH + (Constants.GROUND_WIDTH / 2), y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
+        { x: Constants.GROUND_WIDTH + (Constants.GROUND_WIDTH / 2), y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) - Constants.GROUND_Y_OFFSET }, // <-- Modifique esta linha
         { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT }
     );
 

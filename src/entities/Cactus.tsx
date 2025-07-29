@@ -15,12 +15,29 @@ const CactusComponent = props => {
   const y = props.body.position.y - height / 2;
   const cactusType = props.cactusType;
 
+  let visualYOffset = 0; 
+  switch (cactusType) {
+    case 1:
+      visualYOffset = 25; 
+      break;
+    case 2:
+      visualYOffset = 35;
+      break;
+    case 3:
+      visualYOffset = 40;
+      break;
+    default:
+      visualYOffset = 30;
+      break;
+  }
+
+
   return (
     <Image
       style={{
         position: 'absolute',
         left: x,
-        top: y,
+        top: y + visualYOffset,
         width: width,
         height: height,
         resizeMode: 'contain'
