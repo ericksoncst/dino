@@ -7,6 +7,8 @@ import Dino from './src/entities/Dino';
 import Ground from './src/entities/Ground';
 import Physics from './src/systems/Physics';
 import TouchControl from './src/systems/TouchControl';
+import GroundMovement from './src/systems/GroundMovement';
+import CactusSystem from './src/systems/CactusSystem';
 
 export default class App extends Component {
   constructor(props) {
@@ -27,16 +29,36 @@ export default class App extends Component {
         { width: Constants.DINO_WIDTH, height: Constants.DINO_HEIGHT }
     );
 
-    let ground = Ground(
+    // let ground = Ground(
+    //     world,
+    //     { x: Constants.MAX_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
+    //     { width: Constants.MAX_WIDTH, height: Constants.GROUND_HEIGHT }
+    // );
+
+    let ground1 = Ground(
         world,
-        { x: Constants.MAX_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
-        { width: Constants.MAX_WIDTH, height: Constants.GROUND_HEIGHT }
+        { x: Constants.GROUND_WIDTH / 2, y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
+        { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT }
     );
+
+    let ground2 = Ground(
+        world,
+        { x: Constants.GROUND_WIDTH + (Constants.GROUND_WIDTH / 2), y: Constants.MAX_HEIGHT - (Constants.GROUND_HEIGHT / 2) },
+        { width: Constants.GROUND_WIDTH, height: Constants.GROUND_HEIGHT }
+    );
+
+    let cactusSpawner = {
+        spawnTimer: Constants.OBSTACLE_INTERVAL_MIN,
+        renderer: null
+    };
 
     return {
       physics: { engine: engine, world: world },
       dino: dino,
-      ground: ground,
+      // ground: ground,
+      ground1: ground1,
+      ground2: ground2,
+      cactusSpawner: cactusSpawner
     };
   };
 
@@ -48,7 +70,7 @@ export default class App extends Component {
           <GameEngine
             ref={ref => { this.gameEngine = ref; }}
             style={styles.gameContainer}
-            systems={[Physics, TouchControl]} 
+            systems={[Physics, TouchControl, GroundMovement, CactusSystem]} 
             entities={this.entities}
           />
       </SafeAreaView>
